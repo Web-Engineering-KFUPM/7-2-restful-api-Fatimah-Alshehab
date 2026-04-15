@@ -16,3 +16,17 @@ app.use(express.json());
 await connectDB(process.env.MONGO_URL);
 
 app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+
+app.post("/api/songs", async (req, res) => {
+  try {
+    const { title = "", artist = "", year } = req.body || {};
+    const created = await Song.create({
+      title: title.trim(),
+      artist: artist.trim(),
+      year
+    });
+    res.status(201).json(created);
+  } catch (err) {
+    res.status(400).json({ message: err.message || "Bad Request" });
+  }
+});
